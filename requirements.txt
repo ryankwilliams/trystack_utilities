@@ -1,4 +1,5 @@
 ansible
+shade
 python-novaclient
 python-glanceclient
 python-neutronclient
