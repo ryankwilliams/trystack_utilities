@@ -1,0 +1,19 @@
+# This playbook will add rules to the default security group in a trystack
+# openstack environment.
+# Rules created are to allow ICMP (ping) and TCP (SSH Port 22)
+
+- name: Add security group rules
+  hosts: "{{ hosts | default('localhost') }}"
+
+  tasks:
+    - name: Create rule for ICMP protocol
+      shell: "nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0"
+      register: result
+
+    - debug: var=result
+
+    - name: Create rule for TCP protocol
+      shell: "nova secgroup-add-rule default tcp 22 22 0.0.0.0/0"
+      register: result
+
+    - debug: var=result
