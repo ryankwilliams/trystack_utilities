@@ -1,0 +1,4 @@
+ansible
+python-novaclient
+python-glanceclient
+python-neutronclient
