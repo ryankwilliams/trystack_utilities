@@ -1,0 +1,44 @@
+# This playbook will configure a trystack openstack network.
+# It will create an internal network with a subnet, create a router to connect
+# the internal to external network and will attach the internal interface to
+# the router for external connectivity.
+
+- name: Configure trystack openstack
+  hosts: "{{ hosts | default('localhost') }}"
+
+  vars:
+    _in_network: "{{ in_network | default('internal') }}"
+    _out_network: "{{ out_network | default('public') }}"
+    _subnet: "{{ subnet | default('192.168.52.0/24') }}"
+    _router: "{{ router | default('router') }}"
+
+  tasks:
+    - name: Create an internal network
+      shell: "neutron net-create {{ _in_network }}"
+      register: result
+
+    - debug: var=result
+
+    - name: Create a subnet
+      shell: "neutron subnet-create internal {{ _subnet }} --name internal"
+      register: result
+
+    - debug: var=result
+
+    - name: Create a router
+      shell: "neutron router-create {{ _router }}"
+      register: result
+
+    - debug: var=result
+
+    - name: Set the router external network gateway
+      shell: "neutron router-gateway-set {{ _router }} {{ _out_network }}"
+      register: result
+
+    - debug: var=result
+
+    - name: Attach internal interface to router
+      shell: "neutron router-interface-add {{ _router }} {{ _in_network }}"
+      register: result
+
+    - debug: var=result
