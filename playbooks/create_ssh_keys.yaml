@@ -1,0 +1,21 @@
+# This playbook will generate keys used by SSH protocol using ssh-keygen.
+# It will generate keys without being prompted for passphrase. Good for
+# automation.
+
+- name: Create keys for SSH protocol
+  hosts: "{{ hosts | default('localhost') }}"
+
+  vars:
+    _keyname: "{{ keyname | default('cloud_rsa') }}"
+
+  tasks:
+    - name: ssh-keygen
+      shell: "ssh-keygen -b 2048 -t rsa -f {{ _keyname }} -q -N ''"
+
+    - stat:
+        path: ./{{ _keyname }}
+      register: result
+
+    - fail:
+        msg: "Unable to find SSH keys, maybe generation was not successful?"
+      when: result.stat.exists == false
