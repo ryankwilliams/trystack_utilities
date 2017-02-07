@@ -1,6 +1,5 @@
-# This playbook will generate keys used by SSH protocol using ssh-keygen.
-# It will generate keys without being prompted for passphrase. Good for
-# automation.
+# Playbook creates keys to be used by SSH protocol via ssh-keygen.
+# This does not prompt for passphrase, good for test automation.
 
 - name: Create keys for SSH protocol
   hosts: "{{ hosts | default('localhost') }}"

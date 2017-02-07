@@ -1,28 +1,26 @@
-# This playbook will create a new key pair to be used with instances created.
+# Playbook adds a key pair to tenant to be used with instances creation.
 # It assumes the SSH public key was already generated.
-# How to generate a SSH keys: ssh-keygen
 
 - name: Add key pair to tenant
   hosts: "{{ hosts | default('localhost') }}"
 
   vars:
-    _public_key: "{{ public_key | default('~/.ssh/cloud.key.pub') }}"
+    _public_key: "{{ public_key | default('cloud_rsa.pub') }}"
     _public_keyname: "{{ public_keyname | default('cloud') }}"
 
   tasks:
-    - name: Retrieve facts for SSH public key
-      stat:
+    - stat:
         path: "{{ _public_key }}"
       register: result
 
-    - name: SSH public key does not exist?
-      fail:
+    - fail:
         msg: "SSH public key: {{ _public_key }} does not exist!"
       when: result.stat.exists == false
 
-    - name: Add key pair
-      shell:
-        "nova keypair-add --pub-key {{ _public_key }} {{ _public_keyname }}"
+    - os_keypair:
+        state: present
+        name: "{{ _public_keyname }}"
+        public_key_file: "{{ _public_key }}"
       register: result
 
     - debug: var=result
