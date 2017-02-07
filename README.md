@@ -76,6 +76,10 @@ the API's will read from.
 $ source trystack-rc.sh
 ```
 
+The playbooks below range from setting up your trystack tenants network,
+configuring security group rules, creating keys for SSH protocol and
+adding key pair to OpenStack.
+
 **Configure Network**
 ```Bash
 $ (venv) ansible-playbook create_network.yaml
@@ -86,7 +90,36 @@ $ (venv) ansible-playbook create_network.yaml
 $ (venv) ansible-playbook add_secgroup_rules.yaml
 ```
 
-**Add SSH Public Key for key pair**
+**Add SSH key for key pair**
 ```Bash
 $ (venv) ansible-playbook add_keypair.yaml
+```
+
+**Create keys for SSH protocol**
+```Bash
+$ (venv) ansible-playbook create_ssh_keys.yaml
+```
+
+## Create a resource
+```Bash
+# Boot a VM
+$ (venv) nova boot --flavor 2 --image Fedora24 --key-name cloud fedora24_vm
+
+# Create floating IP
+$ (venv) nova floating-ip-create
+
+# Associate IP with VM
+$ (venv) nova floating-ip-associate fedora24_vm 0.0.0.0
+```
+
+## Delete a resource
+```Bash
+# Disassociate floating IP
+$ (venv) nova floating-ip-disassociate fedora24_vm 0.0.0.0
+
+# Delete a floating IP
+$ (venv) nova floating-ip-delete 0.0.0.0
+
+# Delete a VM
+$ (venv) nova delete fedora24_vm
 ```
