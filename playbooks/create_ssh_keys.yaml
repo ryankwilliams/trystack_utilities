@@ -6,13 +6,28 @@
 
   vars:
     _keyname: "{{ keyname | default('cloud_rsa') }}"
+    _keypath: "{{ keypath | default('$HOME/.ssh/') }}"
 
   tasks:
+    - set_fact:
+        _key_abspath: "{{ _keypath }}{{ _keyname }}"
+      register: result
+
+    - file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ _key_abspath }}"
+        - "{{ _key_abspath }}.pub"
+      register: result
+
+    - debug: var=result
+
     - name: ssh-keygen
-      shell: "ssh-keygen -b 2048 -t rsa -f {{ _keyname }} -q -N ''"
+      shell: "ssh-keygen -b 2048 -t rsa -f {{ _key_abspath }} -q -N ''"
 
     - stat:
-        path: ./{{ _keyname }}
+        path: "{{ _key_abspath }}"
       register: result
 
     - fail:

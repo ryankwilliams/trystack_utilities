@@ -9,6 +9,15 @@
     _public_keyname: "{{ public_keyname | default('cloud') }}"
 
   tasks:
+    # os_keypair does not evalute env variables correctly
+    # Need to get value from shell module
+    - shell: "env | grep -w HOME"
+      register: result
+
+    - set_fact:
+        _public_key:
+          "{{ result.stdout.split('HOME=')[1] }}/.ssh/{{ _public_key }}"
+
     - stat:
         path: "{{ _public_key }}"
       register: result
@@ -17,6 +26,15 @@
         msg: "SSH public key: {{ _public_key }} does not exist!"
       when: result.stat.exists == false
 
+    # Delete keypair that may already exist
+    - os_keypair:
+        state: absent
+        name: "{{ _public_keyname }}"
+      register: result
+
+    - debug: var=result
+
+    # Add keypair
     - os_keypair:
         state: present
         name: "{{ _public_keyname }}"
