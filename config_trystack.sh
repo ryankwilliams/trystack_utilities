@@ -10,15 +10,5 @@ function keyboard_interrupt() {
 	exit 1
 }
 
-# Ansible playbooks
-playbooks=(
-	"create_network.yaml"
-	"add_secgroup_rules.yaml"
-	"create_ssh_keys.yaml"
-	"add_keypair.yaml"
-)
-
-# Run Ansible playbooks
-for pb in ${playbooks[@]}; do
-	ansible-playbook playbooks/$pb
-done
+# Run Ansible playbook
+ansible-playbook config_trystack.yml

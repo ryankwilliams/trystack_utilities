@@ -1,0 +1,4 @@
+_internal_net: "{{ internal_net | default('internal') }}"
+_external_net: "{{ external_net | default('public') }}"
+_subnet: "{{ subnet | default('192.168.52.0/24') }}"
+_router: "{{ router | default('router') }}"

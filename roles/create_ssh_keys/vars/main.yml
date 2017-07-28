@@ -1,0 +1,3 @@
+_keyname: "{{ keyname | default('cloud_rsa') }}"
+_keypath: "{{ keypath | default('$HOME/.ssh/') }}"
+_key_abspath: "{{ _keypath }}{{ _keyname }}"

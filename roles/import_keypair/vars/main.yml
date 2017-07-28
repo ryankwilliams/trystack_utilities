@@ -1,0 +1,2 @@
+_public_key: "{{ public_key | default('cloud_rsa.pub') }}"
+_public_keyname: "{{ public_keyname | default('cloud') }}"
