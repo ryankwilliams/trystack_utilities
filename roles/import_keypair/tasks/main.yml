@@ -1,0 +1,39 @@
+# os_keypair doe snot evaluate env vars correctly
+# need to get value from shell module
+- name: Get HOME directory
+  shell: "env | grep -w HOME"
+  register: results
+
+- name: Set public key absolute path
+  set_fact:
+    _public_key:
+      "{{ results.stdout.split('HOME=')[1] }}/.ssh/{{ _public_key }}"
+
+- name: Check if SSH key exists
+  stat:
+    path: "{{ _public_key }}"
+  register: results
+
+- name: Fail if SSH key not found
+  fail:
+    msg: "SSH public key: {{ _public_key }} does not exist!"
+  when: results.stat.exists == false
+
+- name: Delete SSH keypair that may already exist
+  os_keypair:
+    state: absent
+    name: "{{ _public_keyname }}"
+  register: results
+
+- name: Delete SSH keypair that may already exist - results
+  debug: var=results
+
+- name: Import SSH public keypair
+  os_keypair:
+    state: present
+    name: "{{ _public_keyname }}"
+    public_key_file: "{{ _public_key }}"
+  register: results
+
+- name: Import SSH public keypair - results
+  debug: var=results

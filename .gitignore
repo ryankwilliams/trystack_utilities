@@ -3,4 +3,4 @@
 .project
 
 # Ignore Ansible retry playbooks
-playbooks/*.retry
+*.retry

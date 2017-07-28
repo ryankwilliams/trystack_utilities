@@ -76,28 +76,18 @@ the API's will read from.
 $ source trystack-rc.sh
 ```
 
-The playbooks below range from setting up your trystack tenants network,
-configuring security group rules, creating keys for SSH protocol and
-adding key pair to OpenStack.
+This project contains Ansible roles from setting up your trystack tenants
+network, configuring security group rules, creating keys for SSH protocol and
+adding key pair. You can choose from one of the following ways to run.
 
-**Configure Network**
-```Bash
-$ (venv) ansible-playbook create_network.yaml
+**Bash script**
+```bash
+$ (venv) bash config_trystack.sh
 ```
 
-**Add Security Group Rules**
-```Bash
-$ (venv) ansible-playbook add_secgroup_rules.yaml
-```
-
-**Add SSH key for key pair**
-```Bash
-$ (venv) ansible-playbook add_keypair.yaml
-```
-
-**Create keys for SSH protocol**
-```Bash
-$ (venv) ansible-playbook create_ssh_keys.yaml
+**Ansible playbook**
+```bash
+$ (venv) ansible-playbook config_trystack.yml
 ```
 
 ## Create a resource

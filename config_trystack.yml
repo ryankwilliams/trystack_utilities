@@ -1,0 +1,8 @@
+- name: Configure TryStack environment
+  hosts: "{{ hosts | default('localhost') }}"
+
+  roles:
+    - network
+    - security_group_rules
+    - create_ssh_keys
+    - import_keypair

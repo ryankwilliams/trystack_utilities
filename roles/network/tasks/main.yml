@@ -1,0 +1,30 @@
+- name: Create internal network
+  os_network:
+    name: "{{ _internal_net }}"
+    external: False
+  register: results
+
+- name: Create internal network - results
+  debug: var=results
+
+- name: Create subnet
+  os_subnet:
+    state: present
+    name: "{{ _internal_net }}"
+    network_name: "{{ _internal_net }}"
+    cidr: "{{ _subnet }}"
+  register: results
+
+- name: Create subnet - results
+  debug: var=results
+
+- name: Create router
+  os_router:
+    state: present
+    name: "{{ _router }}"
+    network: "{{ _external_net }}"
+    interfaces: "{{ _internal_net }}"
+  register: results
+
+- name: Create router - results
+  debug: var=results
